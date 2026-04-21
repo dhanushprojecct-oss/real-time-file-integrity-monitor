@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -14,6 +15,13 @@ function App() {
   const [activeModal, setActiveModal] = useState(null);
   const [isLockdown, setIsLockdown] = useState(false);
   const [scanTrigger, setScanTrigger] = useState(0);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:3001');
+    setSocket(newSocket);
+    return () => newSocket.close();
+  }, []);
 
   const openModal = (type) => setActiveModal(type);
   const closeModal = () => setActiveModal(null);
@@ -119,6 +127,7 @@ function App() {
           onRecover={recoverSystem} 
           scanTrigger={scanTrigger}
           onOpenIncident={openModal}
+          socket={socket}
         />
         
         <About onOpenModal={openModal} onTriggerScan={triggerScan} />
