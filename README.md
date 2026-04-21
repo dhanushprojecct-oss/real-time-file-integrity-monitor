@@ -16,8 +16,9 @@ https://real-time-file-integrity-monitor.vercel.app
 - JavaScript
 - CSS
 
-## 📸 Screenshots
-(Add your screenshots here)
+<img width="1873" height="940" alt="Screenshot 2026-04-21 184219" src="https://github.com/user-attachments/assets/1d974691-9054-4bfb-8535-949f32038d2b" />
+<img width="1873" height="938" alt="Screenshot 2026-04-21 184230" src="https://github.com/user-attachments/assets/dd5f47c4-4595-4bd9-a2a7-3823910a56dc" />
+
 
 ## 📖 How It Works
 This system monitors files continuously and generates SHA-256 hashes.  
