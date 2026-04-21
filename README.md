@@ -1,21 +1,34 @@
-<<<<<<< HEAD
-# React + Vite
+# 🚀 Real-Time File Integrity Monitor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A real-time file integrity monitoring system using SHA-256 hashing to detect unauthorized changes.
 
-Currently, two official plugins are available:
+## 🔴 Live Demo
+https://real-time-file-integrity-monitor.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📌 Features
+- Real-time file monitoring
+- SHA-256 hashing for integrity verification
+- Detection of unauthorized file changes
+- Interactive UI dashboard
 
-## React Compiler
+## 🛠 Tech Stack
+- React (Vite)
+- JavaScript
+- CSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📸 Screenshots
+(Add your screenshots here)
 
-## Expanding the ESLint configuration
+## 📖 How It Works
+This system monitors files continuously and generates SHA-256 hashes.  
+If any file is modified, the hash changes → system detects tampering.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# real-time-file-integrity-monitor
-Real-time file integrity monitoring system using SHA-256 hashing to detect unauthorized changes.
->>>>>>> 09097703d852baf550a571fac0d2fb71105e3941
+## 📂 Project Structure
+- `src/` → components and logic
+- `public/` → static assets
+- `vite.config.js` → build configuration
+
+## ⚡ Installation
+```bash
+npm install
+npm run dev
