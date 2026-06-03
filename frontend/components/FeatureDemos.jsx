@@ -1,24 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Bell, ShieldAlert, Cpu, Settings, Copy, CheckCircle2 } from 'lucide-react';
 
 export const SHA256Calculator = () => {
   const [text, setText] = useState('');
+  const [hash, setHash] = useState('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
   const [copied, setCopied] = useState(false);
 
-  // Simple pseudo-SHA256 for demo purposes (to avoid importing heavy libs in this frontend-only demo)
-  // In a real app we'd use crypto.subtle.digest or a library
-  const getHash = (str) => {
-    let hash = 0;
-    if (str.length === 0) return 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
-    // Returning a realistic looking hex for the demo
-    return Array.from(str).reduce((acc, char) => {
-      const charCode = char.charCodeAt(0);
-      return acc + charCode.toString(16);
-    }, '').padEnd(64, 'a').substring(0, 64);
-  };
+  useEffect(() => {
+    const computeHash = async () => {
+      if (text.length === 0) {
+        setHash('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
+        return;
+      }
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        setHash(hashHex);
+      } catch (err) {
+        console.error("SHA-256 calculation error:", err);
+      }
+    };
+    computeHash();
+  }, [text]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(getHash(text));
+    navigator.clipboard.writeText(hash);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -39,10 +48,10 @@ export const SHA256Calculator = () => {
       <div className="space-y-2">
         <label className="text-xs uppercase tracking-widest text-gray-400 font-bold">Computed SHA-256 Hash</label>
         <div className="bg-black/40 border border-white/5 rounded p-3 font-mono text-xs break-all text-cyber-cyan relative group">
-          {getHash(text)}
+          {hash}
           <button 
             onClick={handleCopy}
-            className="absolute top-2 right-2 p-1.5 bg-white/5 rounded hover:bg-white/10 transition-colors"
+            className="absolute top-2 right-2 p-1.5 bg-white/5 rounded hover:bg-white/10 transition-colors cursor-pointer"
           >
             {copied ? <CheckCircle2 className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
           </button>
@@ -66,6 +75,12 @@ export const AlertSettings = () => {
     autoQuarantine: false,
     severity: 'high'
   });
+  const [saved, setSaved] = useState(false);
+
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
 
   return (
     <div className="space-y-6">
@@ -82,7 +97,7 @@ export const AlertSettings = () => {
             </div>
             <button
                onClick={() => setConfig(prev => ({ ...prev, [item.id]: !prev[item.id] }))}
-               className={`w-10 h-5 rounded-full transition-colors relative ${config[item.id] ? 'bg-cyber-blue' : 'bg-gray-700'}`}
+               className={`w-10 h-5 rounded-full transition-colors relative cursor-pointer ${config[item.id] ? 'bg-cyber-blue' : 'bg-gray-700'}`}
             >
               <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${config[item.id] ? 'left-6' : 'left-1'}`} />
             </button>
@@ -97,7 +112,7 @@ export const AlertSettings = () => {
             <button
               key={lev}
               onClick={() => setConfig(prev => ({ ...prev, severity: lev }))}
-              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded border transition-all ${
+              className={`flex-1 py-2 text-[10px] font-bold uppercase rounded border transition-all cursor-pointer ${
                 config.severity === lev ? 'bg-cyber-blue text-black border-cyber-blue' : 'border-white/10 text-gray-400 hover:border-white/20'
               }`}
             >
@@ -107,8 +122,15 @@ export const AlertSettings = () => {
         </div>
       </div>
       
-      <button className="w-full py-3 bg-white/10 hover:bg-white/20 text-xs font-bold uppercase tracking-widest rounded-lg transition-all">
-        Save Configuration
+      <button 
+        onClick={handleSave}
+        className={`w-full py-3 text-xs font-bold uppercase tracking-widest rounded-lg transition-all cursor-pointer border ${
+          saved 
+            ? 'bg-cyber-green/20 border-cyber-green text-cyber-green shadow-neon-green' 
+            : 'bg-white/10 border-white/10 hover:bg-white/20 text-white'
+        }`}
+      >
+        {saved ? '✓ CONFIG DEPLOYED TO KERNEL' : 'Save Configuration'}
       </button>
     </div>
   );

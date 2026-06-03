@@ -9,6 +9,7 @@ import Contact from './components/Contact';
 import MatrixBackground from './components/MatrixBackground';
 import Modal from './components/Modal';
 import LockdownOverlay from './components/LockdownOverlay';
+import { AlertTriangle } from 'lucide-react';
 import { SHA256Calculator, AlertSettings } from './components/FeatureDemos';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
   const [isLockdown, setIsLockdown] = useState(false);
   const [scanTrigger, setScanTrigger] = useState(0);
   const [socket, setSocket] = useState(null);
+  const [dashboardTab, setDashboardTab] = useState('monitor');
 
   useEffect(() => {
     const newSocket = io('http://localhost:3001');
@@ -27,7 +29,8 @@ function App() {
   const closeModal = () => setActiveModal(null);
   const triggerLockdown = () => setIsLockdown(true);
   const recoverSystem = () => setIsLockdown(false);
-  const triggerScan = () => {
+  const triggerScan = (tab = 'monitor') => {
+    setDashboardTab(tab);
     setScanTrigger(prev => prev + 1);
     document.getElementById('dashboard')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -128,6 +131,8 @@ function App() {
           scanTrigger={scanTrigger}
           onOpenIncident={openModal}
           socket={socket}
+          activeTab={dashboardTab}
+          setActiveTab={setDashboardTab}
         />
         
         <About onOpenModal={openModal} onTriggerScan={triggerScan} />

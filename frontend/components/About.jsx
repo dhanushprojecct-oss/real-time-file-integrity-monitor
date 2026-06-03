@@ -29,13 +29,13 @@ const About = ({ onOpenModal, onTriggerScan }) => {
   const handleStepClick = (index) => {
     switch (index) {
       case 0: // Data Acquisition
-        onTriggerScan();
+        onTriggerScan('monitor');
         break;
       case 1: // SHA-256
         onOpenModal('sha256');
         break;
       case 2: // Baseline
-        onTriggerScan();
+        onTriggerScan('wizard');
         break;
       case 3: // Alerting
         onOpenModal('alerts');
