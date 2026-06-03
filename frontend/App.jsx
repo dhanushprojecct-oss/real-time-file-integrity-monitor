@@ -12,6 +12,12 @@ import LockdownOverlay from './components/LockdownOverlay';
 import { AlertTriangle } from 'lucide-react';
 import { SHA256Calculator, AlertSettings } from './components/FeatureDemos';
 
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3001'
+    : 'https://real-time-file-integrity-monitor-backend.onrender.com'
+);
+
 function App() {
   const [activeModal, setActiveModal] = useState(null);
   const [isLockdown, setIsLockdown] = useState(false);
@@ -20,7 +26,7 @@ function App() {
   const [dashboardTab, setDashboardTab] = useState('monitor');
 
   useEffect(() => {
-    const newSocket = io('http://localhost:3001');
+    const newSocket = io(BACKEND_URL);
     setSocket(newSocket);
     return () => newSocket.close();
   }, []);

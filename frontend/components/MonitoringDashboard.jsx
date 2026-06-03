@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { AlertCircle, Cpu, Edit3, Save, Terminal, Trash2, UploadCloud, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { BACKEND_URL } from '../App';
 
 const MonitoringDashboard = ({ isLockdown, onTriggerLockdown, onRecover, scanTrigger, onOpenIncident, socket, activeTab, setActiveTab }) => {
   const [logs, setLogs] = useState([]);
@@ -206,7 +207,7 @@ const MonitoringDashboard = ({ isLockdown, onTriggerLockdown, onRecover, scanTri
       formData.append('files', files[i]);
     }
     try {
-      const res = await fetch('http://localhost:3001/upload', {
+      const res = await fetch(`${BACKEND_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -233,7 +234,7 @@ const MonitoringDashboard = ({ isLockdown, onTriggerLockdown, onRecover, scanTri
 
   const openEditor = async (filePath) => {
     try {
-      const res = await fetch(`http://localhost:3001/file/content?path=${encodeURIComponent(filePath)}`);
+      const res = await fetch(`${BACKEND_URL}/file/content?path=${encodeURIComponent(filePath)}`);
       if (res.ok) {
         const data = await res.json();
         setEditingFile(data);
@@ -249,7 +250,7 @@ const MonitoringDashboard = ({ isLockdown, onTriggerLockdown, onRecover, scanTri
   const saveFileEdits = async () => {
     if (!editingFile) return;
     try {
-      const res = await fetch('http://localhost:3001/file/edit', {
+      const res = await fetch(`${BACKEND_URL}/file/edit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ path: editingFile.path, content: editingFile.content })
@@ -275,7 +276,7 @@ const MonitoringDashboard = ({ isLockdown, onTriggerLockdown, onRecover, scanTri
     }
     setDeleteConfirmPath(null);
     try {
-      const res = await fetch(`http://localhost:3001/file/delete?path=${encodeURIComponent(filePath)}`, {
+      const res = await fetch(`${BACKEND_URL}/file/delete?path=${encodeURIComponent(filePath)}`, {
         method: 'DELETE'
       });
       if (!res.ok) {
@@ -293,9 +294,9 @@ const MonitoringDashboard = ({ isLockdown, onTriggerLockdown, onRecover, scanTri
     const fetchInitialData = async () => {
       try {
         const [logsRes, filesRes, statusRes] = await Promise.all([
-          fetch('http://localhost:3001/logs'),
-          fetch('http://localhost:3001/files'),
-          fetch('http://localhost:3001/status')
+          fetch(`${BACKEND_URL}/logs`),
+          fetch(`${BACKEND_URL}/files`),
+          fetch(`${BACKEND_URL}/status`)
         ]);
 
         const initialLogs = await logsRes.json();
@@ -371,7 +372,7 @@ const MonitoringDashboard = ({ isLockdown, onTriggerLockdown, onRecover, scanTri
     const startTime = performance.now();
     setSystemStatus('SCANNING');
     try {
-      const res = await fetch('http://localhost:3001/scan', {
+      const res = await fetch(`${BACKEND_URL}/scan`, {
         method: 'POST'
       });
       const endTime = performance.now();
